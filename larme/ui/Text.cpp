@@ -1,5 +1,7 @@
 #include "Text.hpp"
 
+#include "ui/cocosGUI.h"
+
 namespace larme {
 namespace ui {
 
