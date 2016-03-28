@@ -6,6 +6,9 @@
 namespace larme{
 namespace eventlistener{
 
+/**
+ * class TouchInfo
+ */
 class TouchInfo
 {
     CC_SYNTHESIZE(bool, isMoving, IsMoving);
@@ -25,6 +28,9 @@ public:
     }
 };
 
+/**
+ * class EventListenerTouchAction::Impl
+ */
 class EventListenerTouchAction::Impl
 {
     CC_SYNTHESIZE(float, panRange, PanRange);
@@ -104,20 +110,6 @@ bool EventListenerTouchAction::Impl::isSingleTouch() {
     return 1 == count;
 }
 
-EventListenerTouchAction* EventListenerTouchAction::create()
-{
-    auto ret = new (std::nothrow) EventListenerTouchAction();
-    if (ret && ret->init())
-    {
-        ret->autorelease();
-    }
-    else
-    {
-        CC_SAFE_DELETE(ret);
-    }
-    return ret;
-}
-
 void EventListenerTouchAction::Impl::removeTouchInfo(cocos2d::Touch *touch)
 {
     if (nullptr != this->touchInfos[touch->getID()]) {
@@ -187,6 +179,23 @@ void EventListenerTouchAction::Impl::onTouchesEnded(const std::vector<Touch*>& t
         this->removeTouchInfo(touch);
     }
     this->listener->onTouchesActionEnded(touches, event);
+}
+
+/**
+ * methods EventListenerTouchAction
+ */
+EventListenerTouchAction* EventListenerTouchAction::create()
+{
+    auto ret = new (std::nothrow) EventListenerTouchAction();
+    if (ret && ret->init())
+    {
+        ret->autorelease();
+    }
+    else
+    {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
 }
 
 EventListenerTouchAction::EventListenerTouchAction()

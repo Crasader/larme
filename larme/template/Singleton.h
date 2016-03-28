@@ -1,4 +1,3 @@
-
 #pragma once
 
 // https://gist.github.com/DanDanBaker/2299755
