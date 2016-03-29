@@ -20,6 +20,14 @@ void SceneManager::replace(int number) {
     auto scene = this->sceneList.at(number)();
     Director::getInstance()->replaceScene(scene);
 }
+    
+void SceneManager::runWith(int number) {
+    if (0 == this->sceneList.count(number)) {
+        log("Scene number %d not found", number);
+    }
+    auto scene = this->sceneList.at(number)();
+    Director::getInstance()->runWithScene(scene);
+}
 
 }}
 

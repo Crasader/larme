@@ -15,6 +15,7 @@ public:
     SceneManager();
     void registerScene(int number, cocos2d::Scene* (*sceneCreate)());
     void replace(int number);
+    void runWith(int number);
 private:
     std::unordered_map<int, Scene*(*)()> sceneList;
 };
