@@ -5,7 +5,6 @@
 
 USING_NS_CC;
 
-
 namespace larme {
 namespace util {
 
