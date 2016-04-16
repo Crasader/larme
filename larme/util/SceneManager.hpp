@@ -14,9 +14,14 @@ public:
     SceneManager();
     void registerScene(int number, cocos2d::Scene* (*sceneCreate)());
     void replace(int number);
+    void replace(Scene* scene);
+    template<typename T> T createScene(int number) {
+        cocos2d::Scene* scene = this->functionSceneCreate.at(number)();
+        return static_cast<T>(scene);
+    }
     void runWith(int number);
 private:
-    std::unordered_map<int, Scene*(*)()> sceneList;
+    std::unordered_map<int, Scene*(*)()> functionSceneCreate;
 };
     
 }}
