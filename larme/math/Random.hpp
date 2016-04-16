@@ -9,7 +9,8 @@ namespace math {
 
 class Random
 {
-    int between(const int min, const int max);
+public:
+    static int between(const int min, const int max);
 };
 
 }
