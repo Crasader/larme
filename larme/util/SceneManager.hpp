@@ -8,18 +8,40 @@ USING_NS_CC;
 namespace larme {
 namespace util {
 
-class SceneManager : public larme::templates::Singleton<SceneManager>
+template<typename T>
+class SceneManager : public larme::templates::Singleton<T>
 {
 public:
-    SceneManager();
-    void registerScene(int number, cocos2d::Scene* (*sceneCreate)());
-    void replace(int number);
-    void replace(Scene* scene);
-    template<typename T> T createScene(int number) {
+    template<typename S> S createScene(int number) {
         cocos2d::Scene* scene = this->functionSceneCreate.at(number)();
-        return static_cast<T>(scene);
+        return static_cast<S>(scene);
+        // should be dynamic_cast?
     }
-    void runWith(int number);
+    
+    void registerScene(int number, cocos2d::Scene* (*sceneCreate)()) {
+        this->functionSceneCreate.insert(std::pair<int, Scene*(*)()>(number, sceneCreate));
+    }
+    
+    void replace(int number) {
+        if (0 == this->functionSceneCreate.count(number)) {
+            log("Scene number %d not found", number);
+        }
+        auto scene = this->functionSceneCreate.at(number)();
+        Director::getInstance()->replaceScene(scene);
+    }
+    
+    void replace(Scene* scene) {
+        Director::getInstance()->replaceScene(scene);
+    }
+    
+    void runWith(int number) {
+        if (0 == this->functionSceneCreate.count(number)) {
+            log("Scene number %d not found", number);
+        }
+        auto scene = this->functionSceneCreate.at(number)();
+        Director::getInstance()->runWithScene(scene);
+    }
+    
 private:
     std::unordered_map<int, Scene*(*)()> functionSceneCreate;
 };
