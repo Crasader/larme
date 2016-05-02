@@ -33,7 +33,10 @@ std::string ValueVectorMap::getStringAt(int number, const std::string &name) {
 }
 
 std::string ValueVectorMap::getStringAt(int number, const std::string &name, const std::string &defaultValue) {
-    return this->values.at(number)->at(name).asString();
+    if (0 < this->values.at(number)->count(name)) {
+        return this->values.at(number)->at(name).asString();
+    }
+    return defaultValue;
 }
 
 int ValueVectorMap::getIntegerAt(int number, const std::string &name) {
@@ -41,7 +44,21 @@ int ValueVectorMap::getIntegerAt(int number, const std::string &name) {
 }
 
 int ValueVectorMap::getIntegerAt(int number, const std::string &name, const int defaultValue) {
-    return this->values.at(number)->at(name).asInt();
+    if (0 < this->values.at(number)->count(name)) {
+        return this->values.at(number)->at(name).asInt();
+    }
+    return defaultValue;
+}
+    
+float ValueVectorMap::getFloatAt(int number, const std::string &name) {
+    return this->values.at(number)->at(name).asFloat();
+}
+
+float ValueVectorMap::getFloatAt(int number, const std::string &name, const float defaultValue) {
+    if (0 < this->values.at(number)->count(name)) {
+        return this->values.at(number)->at(name).asFloat();
+    }
+    return defaultValue;
 }
 
 void ValueVectorMap::push(const cocos2d::ValueMap* valueMap) {
