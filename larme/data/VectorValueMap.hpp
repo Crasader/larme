@@ -9,13 +9,13 @@ USING_NS_CC;
 namespace larme {
 namespace data {
     
-class ValueVectorMap
+class VectorValueMap
 {
 private:
     std::vector<const cocos2d::ValueMap*> values;
 public:
-    ValueVectorMap();
-    ~ValueVectorMap();
+    VectorValueMap();
+    ~VectorValueMap();
     int size();
     const std::vector<const cocos2d::ValueMap*>* getValue();
     std::string getStringAt(int number, const std::string &name);
@@ -26,7 +26,7 @@ public:
     float getFloatAt(int number, const std::string &name, const float defaultValue);
     void push(const cocos2d::ValueMap* valueMap);
     
-    static ValueVectorMap* createFromCsvFile(const std::string &filepath);
+    static VectorValueMap* createFromCsvFile(const std::string &filepath);
 };
 
 }}

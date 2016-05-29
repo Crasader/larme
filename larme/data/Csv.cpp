@@ -3,8 +3,8 @@
 namespace larme {
 namespace data {
     
-ValueVectorMap* Csv::toValueVectorMap(const std::string &stringCsv) {
-    ValueVectorMap* valueVectorMap = new ValueVectorMap();
+VectorValueMap* Csv::toVectorValueMap(const std::string &stringCsv) {
+    VectorValueMap* vectorValueMap = new VectorValueMap();
     
     std::vector<std::string> rows, rowNames;
     Csv::stringToVector(&rows, stringCsv, "\n");
@@ -12,10 +12,10 @@ ValueVectorMap* Csv::toValueVectorMap(const std::string &stringCsv) {
     for (int i = 1; i < (int)rows.size(); i ++) {
         ValueMap* valueMap = new ValueMap();
         Csv::stringToValueMap(valueMap, rows.at(i), rowNames);
-        valueVectorMap->push(valueMap);
+        vectorValueMap->push(valueMap);
     }
     
-    return valueVectorMap;
+    return vectorValueMap;
 }
 
 void Csv::stringToVector(std::vector<std::string>* vectorStrings, const std::string &stringCsv, const std::string &delimiter) {
