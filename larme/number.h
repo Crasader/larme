@@ -1,7 +1,7 @@
 #pragma once
 
 namespace larme {
-namespace math {
+namespace number {
     
     template<typename T>
     T fit(const T min, const T value, const T max)
