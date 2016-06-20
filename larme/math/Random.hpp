@@ -11,6 +11,7 @@ class Random
 {
 public:
     static int between(const int min, const int max);
+    static int oneOrMinusOne();
 };
 
 }
