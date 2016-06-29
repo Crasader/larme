@@ -22,7 +22,7 @@ namespace audio {
     
     BgmObject::~BgmObject()
     {
-        this->stop();
+        this->forceStop();
         this->scheduler->unscheduleUpdate(this);
         CC_SAFE_RELEASE_NULL(this->scheduler);
     }
@@ -44,20 +44,39 @@ namespace audio {
     
     bool BgmObject::play(float secondsFadeIn)
     {
-        this->audioId = AudioEngine::play2d(this->bgmFilePath, true, this->volume);
+        switch (this->state) {
+            case STATE::PLAYING:
+            case STATE::FADE_IN:
+                // 何もしない
+                return true;
+            case STATE::ERROR:
+            case STATE::END:
+            case STATE::INIT:
+            case STATE::PAUSE:
+                // 再生してないので再生を試みる
+                this->audioId = AudioEngine::play2d(this->bgmFilePath, true, this->volume);
+                break;
+            case STATE::FADE_OUT:
+            default:
+                // 再生中であるはずなので FADE_IN にする
+                break;
+        }
         if (this->audioId == AudioEngine::INVALID_AUDIO_ID) {
             this->state = STATE::ERROR;
+            setScheduleRun(false);
             return false;
         }
         
         if (secondsFadeIn > 0) {
-            fadeTimer = 0.0f;
-            fadeDuration = secondsFadeIn;
             AudioEngine::setVolume(audioId, 0.0f);
-            this->state = FADE_IN;
+            this->fadeTimer = 0.0f;
+            this->fadeDuration = secondsFadeIn;
+            this->state = STATE::FADE_IN;
             setScheduleRun(true);
         } else {
+            AudioEngine::setVolume(audioId, this->volume);
             this->state = PLAYING;
+            setScheduleRun(false);
         }
         return true;
     }
@@ -98,6 +117,7 @@ namespace audio {
             }
                 break;
             default:
+                //log("default(%d)", bgmId);// ここにはこない
                 setScheduleRun(false);
                 this->state = STATE::ERROR;
                 break;
@@ -106,6 +126,16 @@ namespace audio {
     
     void BgmObject::stop(float secondsFadeOut)
     {
+        switch (this->state) {
+            case STATE::ERROR:
+            case STATE::END:
+            case STATE::INIT:
+            case STATE::PAUSE:
+                this->state = STATE::END;
+                return;
+            default:
+                break;
+        }
         if (audioId == AudioEngine::INVALID_AUDIO_ID) {
             this->state = STATE::ERROR;
             setScheduleRun(false);
@@ -115,11 +145,21 @@ namespace audio {
             this->state = STATE::END;
             AudioEngine::stop(audioId);
         } else if (0 < secondsFadeOut) {
+            // FADE_OUT中ならば Timerリセットしない
+            if (this->state != STATE::FADE_OUT) {
+                fadeTimer = 0.0f;
+            }
             this->state = STATE::FADE_OUT;
-            fadeTimer = 0.0f;
             fadeDuration = secondsFadeOut;
             setScheduleRun(true);
         }
+    }
+    
+    void BgmObject::forceStop()
+    {
+        this->state = STATE::END;
+        AudioEngine::stop(audioId);
+        setScheduleRun(false);
     }
     
     void BgmObject::pause()

@@ -15,13 +15,13 @@ namespace audio {
         CC_SYNTHESIZE_READONLY(int32_t, bgmId, BgmId)
     public:
         enum STATE {
-            INIT,
-            PLAYING,
-            PAUSE,
-            END,
-            FADE_OUT,
-            FADE_IN,
-            ERROR,
+            INIT = 0,
+            PLAYING = 1,
+            PAUSE = 2,
+            END = 3,
+            FADE_OUT = 4,
+            FADE_IN = 5,
+            ERROR = 6,
         };
         CC_SYNTHESIZE_READONLY(STATE, state, State);
         
@@ -41,6 +41,7 @@ namespace audio {
     public:
         bool play(float secondsFadeIn = 0.0f);
         void stop(float secondsFadeOut = 0.0f);
+        void forceStop();
         void pause();
         void resume();
         

@@ -28,11 +28,28 @@ public:
         this->bgmList.insert(std::pair<int, std::string>(number, audioPath));
     }
     
+    void playBgmObject(BgmObject* bgmObject, bool isCrossfade) {
+        if (isCrossfade) {
+            bgmObject->play(this->fadeDuration);
+        } else {
+            bgmObject->play();
+        }
+    }
+    
+    void stopBgmObject(BgmObject* bgmObject, bool isCrossfade) {
+        if (isCrossfade) {
+            bgmObject->stop(this->fadeDuration);
+        } else {
+            bgmObject->stop();
+        }
+    }
     // 一から再生
     void play(int32_t bgmId, bool isCrossFade = false);
+    void stopAllAndPlay(int32_t bgmId, bool isCrossFade = false);
     // 同じ曲を再生中なら処理なし
     void playContinue(int32_t bgmId, bool isCrossFade = false);
-    void stop(bool fade);
+    void stopAllAndPlayContinue(int32_t bgmId, bool isCrossFade = false);
+    void stopAll(bool fade);
     void pause();
     void resume();
     float getVolume() { return volume; }
@@ -47,8 +64,6 @@ private:
     void destroy() {
         delete this;
     }
-    
-    void stopAll();
     void clean();
     
 private:
